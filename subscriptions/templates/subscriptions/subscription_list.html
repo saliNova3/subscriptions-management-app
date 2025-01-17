@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>My Subscriptions</h1>
+  <p><a href="{% url 'subscriptions:create' %}">Add New Subscription</a></p>
+
+  <ul>
+    {% for sub in subscriptions %}
+      <li>
+        <a href="{% url 'subscriptions:detail' sub.pk %}">
+          {{ sub.name }} ({{ sub.billing_cycle }})
+        </a> - ${{ sub.cost }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

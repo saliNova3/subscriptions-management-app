@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ subscription.name }}</h2>
+  <p>Cost: ${{ subscription.cost }}</p>
+  <p>Billing Cycle: {{ subscription.get_billing_cycle_display }}</p>
+  <p>Next Renewal: {{ subscription.next_renewal }}</p>
+
+  <a href="{% url 'subscriptions:update' subscription.pk %}">Edit</a>
+  <a href="{% url 'subscriptions:list' %}">Back to List</a>
+{% endblock %}
