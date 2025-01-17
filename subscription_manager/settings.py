@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'subscriptions',
+    
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,13 @@ LOGIN_URL = 'login'
 
 # Where to redirect the user after logout
 LOGOUT_REDIRECT_URL = 'login'
+
+
+# For development/testing, use the console backend (prints emails to terminal)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+
+DEFAULT_FROM_EMAIL = 'no-reply@subscriptionmanager.com'
+
+
