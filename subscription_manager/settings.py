@@ -122,3 +122,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_REDIRECT_URL = 'subscriptions:list'  
+
+# Where to redirect the user if they need to log in
+LOGIN_URL = 'login'
+
+# Where to redirect the user after logout
+LOGOUT_REDIRECT_URL = 'login'
