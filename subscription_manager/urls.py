@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import home_view
 from django.contrib.auth import views as auth_views
+from subscriptions import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,7 @@ urlpatterns = [
     # Our custom user paths
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
+
+    # Registration
+    path('register/', views.register_view, name='register'),
 ]

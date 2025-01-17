@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Subscription
 from .forms import SubscriptionForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.contrib.auth import login as auth_login
+
 
 @login_required
 def subscription_list(request):
@@ -55,3 +59,22 @@ def subscription_update(request, pk):
 
     return render(request, 'subscriptions/subscription_form.html', {'form': form})
 
+
+
+
+def register_view(request):
+    """
+    Handle user registration using Django's built-in UserCreationForm.
+    """
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()  # This creates the user
+            messages.success(request, "Your account was created successfully!")
+            # Optionally log the user in immediately
+            auth_login(request, user)
+            return redirect('subscriptions:list')  # or wherever you want
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/register.html', {'form': form})
