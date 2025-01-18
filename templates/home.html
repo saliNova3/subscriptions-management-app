@@ -1,8 +1,99 @@
-
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-  <h1>Welcome to Subscription Manager</h1>
-  <p>You can manage all your subscriptions here.</p>
-  <a href="{% url 'subscriptions:list' %}">Go to My Subscriptions</a>
-{% endblock %}
+  <!-- HERO / BANNER -->
+  <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
+    <!-- Left Col: Hero Text -->
+    <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
+      <p class="uppercase tracking-loose w-full">
+        Welcome to Your Centralized Dashboard
+      </p>
+      <h1 class="my-4 text-5xl font-bold leading-tight">
+        Manage All Your Subscriptions in One Place
+      </h1>
+      <p class="leading-normal text-2xl mb-8">
+        Track costs, renewal dates, and never forget a subscription again.
+      </p>
+      <div class="flex space-x-4">
+        <a
+          href="{% url 'register' %}"
+          class="bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg
+                 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+        >
+          Get Started
+        </a>
+        <a
+          href="{% url 'login' %}"
+          class="bg-transparent border border-white text-white rounded-full my-6 py-4 px-8
+                 focus:outline-none focus:shadow-outline hover:bg-white hover:text-gray-800 transition"
+        >
+          Log In
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Col: Hero Image (optional) -->
+    <div class="w-full md:w-3/5 py-6 text-center">
+      <!-- Example: local image in static folder -->
+      <img
+        class="w-full md:w-4/5 z-50"
+        src="{% static 'images/hero.png' %}"
+        alt="Hero illustration"
+      />
+    </div>
+  </div>
+
+  <!-- OPTIONAL FEATURE SECTION -->
+  <section class="bg-white border-b py-8 mt-10">
+    <div class="container max-w-5xl mx-auto m-8">
+      <h2 class="w-full my-2 text-4xl font-bold leading-tight text-center text-gray-800">
+        Why Subscription Manager?
+      </h2>
+      <div class="w-full mb-4">
+        <div class="h-1 mx-auto gradient w-48 opacity-25 my-0 py-0 rounded-t"></div>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="flex flex-wrap mt-6">
+        <!-- Card 1 -->
+        <div class="w-full sm:w-1/2 p-6">
+          <div class="bg-gray-100 rounded-lg shadow p-6">
+            <h3 class="text-2xl text-gray-800 font-bold mb-3">Track Renewal Dates</h3>
+            <p class="text-gray-600 mb-5">
+              Get email reminders and notifications before subscriptions renew,
+              so you never miss a deadline or pay for something you don’t need.
+            </p>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="w-full sm:w-1/2 p-6">
+          <div class="bg-gray-100 rounded-lg shadow p-6">
+            <h3 class="text-2xl text-gray-800 font-bold mb-3">Analyze Spending</h3>
+            <p class="text-gray-600 mb-5">
+              See at a glance how much you spend monthly or yearly
+              across all services—Netflix, Spotify, Gym memberships, etc.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALL TO ACTION -->
+  <section class="container mx-auto text-center py-8">
+    <h2 class="w-full my-2 text-4xl font-bold leading-tight text-white">
+      Ready to Simplify Your Life?
+    </h2>
+    <p class="text-xl text-white mb-8">
+      Sign up for free and start managing subscriptions effortlessly.
+    </p>
+    <a
+      href="{% url 'register' %}"
+      class="bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg
+             focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+    >
+      Register Now
+    </a>
+  </section>
+{% endblock content %}

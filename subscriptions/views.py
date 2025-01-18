@@ -5,6 +5,7 @@ from .forms import SubscriptionForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
+from .forms import MyLoginForm
 
 
 @login_required
@@ -78,3 +79,15 @@ def register_view(request):
         form = UserCreationForm()
 
     return render(request, 'registration/register.html', {'form': form})
+
+def my_login_view(request):
+    if request.method == 'POST':
+        form = MyLoginForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+            return redirect('home')  # or wherever
+    else:
+        form = MyLoginForm(request)
+
+    return render(request, 'registration/login.html', {'form': form})

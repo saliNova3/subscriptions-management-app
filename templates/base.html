@@ -1,49 +1,198 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Subscription Manager</title>
-    <link href="{% static 'css/tailwind.output.css' %}" rel="stylesheet">
-
-  </head>
-  <body class="bg-gray-50 text-gray-900">
-    <header>
-      <nav class="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-        <!-- Logo or Site Name -->
-        <a href="{% url 'subscriptions:list' %}" class="text-xl font-bold text-blue-600">
-          Subscription Manager
-        </a>
     
-        <!-- Nav Links (conditional on auth status) -->
-        <div class="space-x-4">
-          {% if user.is_authenticated %}
-            <a href="{% url 'subscriptions:list' %}" class="text-gray-700 hover:text-blue-600">My Subscriptions</a>
-            
-            <!-- A logout button or form -->
-            <form method="post" action="{% url 'logout' %}" class="inline">
-              {% csrf_token %}
-              <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                Logout
-              </button>
-            </form>
-          {% else %}
-            <a href="{% url 'login' %}" class="text-gray-700 hover:text-blue-600">Login</a>
-            <a href="{% url 'register' %}" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Register</a>
-          {% endif %}
+    <!-- Tailwind CSS via CDN -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <!-- Optional Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+      rel="stylesheet"
+    />
+
+    <!-- Gradient style for header/hero (optional) -->
+    <style>
+      .gradient {
+        background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+      }
+    </style>
+  </head>
+
+  <body
+    class="leading-normal tracking-normal text-white gradient"
+    style="font-family: 'Source Sans Pro', sans-serif;"
+  >
+    <!-- NAVBAR -->
+    <nav id="header" class="fixed w-full z-30 top-0 text-white">
+      <div
+        class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2"
+      >
+        <!-- Brand / Logo -->
+        <div class="pl-4 flex items-center">
+          <a
+            id="brandname"
+            href="{% url 'home' %}"
+            class="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
+          >
+            <!-- Example inline SVG icon -->
+            <svg
+              class="h-8 w-8 text-white inline mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 
+                   7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 
+                   1 0 01-1 1h-3m-4 0h3"
+              />
+            </svg>
+            Subscription Manager
+          </a>
         </div>
-      </nav>
-    </header>
 
-    <main class="min-h-screen">
+        <!-- Mobile hamburger toggle -->
+        <div class="block lg:hidden pr-4">
+          <button
+            id="nav-toggle"
+            class="flex items-center p-1 text-pink-800 hover:text-gray-900 focus:outline-none
+                   transform transition hover:scale-105 duration-300 ease-in-out"
+          >
+            <svg
+              class="fill-current h-6 w-6"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>Menu</title>
+              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Nav links -->
+        <div
+          class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-white 
+                 lg:bg-transparent text-black p-4 lg:p-0 z-20"
+          id="nav-content"
+        >
+          <ul class="list-reset lg:flex justify-end flex-1 items-center">
+            <!-- Example links -->
+            <li class="mr-3">
+              <a
+                class="inline-block py-2 px-4 text-black font-bold no-underline"
+                href="{% url 'home' %}"
+                >Home</a
+              >
+            </li>
+            <li class="mr-3">
+              <a
+                class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
+                href="#"
+                >Subscriptions</a
+              >
+            </li>
+            <li class="mr-3">
+              <a
+                class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
+                href="{% url 'login' %}"
+                >Login</a
+              >
+            </li>
+            <li class="mr-3">
+              <a
+                class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
+                href="{% url 'register' %}"
+                >Register</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="pt-24">
       {% block content %}
-      {% endblock %}
-    </main>
+      {% endblock content %}
+    </div>
 
-    <footer class="bg-white border-t border-gray-200 py-2 mt-4">
-      <div class="container mx-auto px-4 text-center text-sm text-gray-500">
-        © 2025 Subscription Manager - All Rights Reserved
+    <!-- FOOTER -->
+    <footer class="bg-white">
+      <div class="container mx-auto px-8 py-6">
+        <div class="flex flex-col md:flex-row text-gray-800">
+          <div class="mb-6 md:mb-0 md:mr-6">
+            <h3 class="font-bold text-xl">Subscription Manager</h3>
+            <p class="text-sm">Simplify your subscription tracking.</p>
+          </div>
+          <div class="md:ml-auto">
+            <p class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</p>
+          </div>
+        </div>
       </div>
     </footer>
-    
+
+    <!-- JS for Nav Toggle, Scroll, etc. -->
+    <script>
+      var scrollpos = window.scrollY;
+      var header = document.getElementById("header");
+      var navcontent = document.getElementById("nav-content");
+      var navtoggle = document.getElementById("nav-toggle");
+      var toToggle = document.querySelectorAll(".toggleColour");
+
+      document.addEventListener("scroll", function () {
+        scrollpos = window.scrollY;
+        if (scrollpos > 10) {
+          header.classList.add("bg-white", "shadow");
+          navcontent.classList.remove("bg-gray-100");
+          navcontent.classList.add("bg-white");
+
+          for (var i = 0; i < toToggle.length; i++) {
+            toToggle[i].classList.add("text-gray-800");
+            toToggle[i].classList.remove("text-white");
+          }
+        } else {
+          header.classList.remove("bg-white", "shadow");
+          navcontent.classList.remove("bg-white");
+          navcontent.classList.add("bg-gray-100");
+
+          for (var i = 0; i < toToggle.length; i++) {
+            toToggle[i].classList.add("text-white");
+            toToggle[i].classList.remove("text-gray-800");
+          }
+        }
+      });
+
+      // Menu toggle for mobile
+      document.onclick = check;
+      function check(e) {
+        var target = (e && e.target) || (event && event.srcElement);
+        if (!checkParent(target, navcontent)) {
+          if (checkParent(target, navtoggle)) {
+            navcontent.classList.toggle("hidden");
+          } else {
+            navcontent.classList.add("hidden");
+          }
+        }
+      }
+      function checkParent(t, elm) {
+        while (t.parentNode) {
+          if (t == elm) return true;
+          t = t.parentNode;
+        }
+        return false;
+      }
+    </script>
   </body>
 </html>
