@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from .forms import MyLoginForm
-
+from .forms import CustomUserCreationForm
 
 @login_required
 def subscription_list(request):
@@ -65,29 +65,40 @@ def subscription_update(request, pk):
 
 def register_view(request):
     """
-    Handle user registration using Django's built-in UserCreationForm.
+    Handle user registration using your custom UserCreationForm with Tailwind classes.
     """
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()  # This creates the user
             messages.success(request, "Your account was created successfully!")
             # Optionally log the user in immediately
             auth_login(request, user)
-            return redirect('subscriptions:list')  # or wherever you want
+            return redirect('subscriptions:list')  
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
     return render(request, 'registration/register.html', {'form': form})
 
 def my_login_view(request):
+    
     if request.method == 'POST':
+        
         form = MyLoginForm(request, data=request.POST)
+        
+        
         if form.is_valid():
+            
             user = form.get_user()
+            
+            
             auth_login(request, user)
-            return redirect('home')  # or wherever
+            
+            
+            return redirect('home')
+    
     else:
         form = MyLoginForm(request)
 
+    
     return render(request, 'registration/login.html', {'form': form})

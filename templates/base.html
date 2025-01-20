@@ -4,6 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/price-tag.png' %}">
+
     <title>Subscription Manager</title>
     
     <!-- Tailwind CSS via CDN -->
@@ -87,7 +89,8 @@
           id="nav-content"
         >
           <ul class="list-reset lg:flex justify-end flex-1 items-center">
-            <!-- Example links -->
+
+            <!-- Always visible: Home link -->
             <li class="mr-3">
               <a
                 class="inline-block py-2 px-4 text-black font-bold no-underline"
@@ -95,27 +98,49 @@
                 >Home</a
               >
             </li>
-            <li class="mr-3">
-              <a
-                class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
-                href="#"
-                >Subscriptions</a
-              >
-            </li>
-            <li class="mr-3">
-              <a
-                class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
-                href="{% url 'login' %}"
-                >Login</a
-              >
-            </li>
-            <li class="mr-3">
-              <a
-                class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
-                href="{% url 'register' %}"
-                >Register</a
-              >
-            </li>
+
+            <!-- Show if user is logged in -->
+            {% if user.is_authenticated %}
+              <!-- Example: Link to Subscriptions -->
+              <li class="mr-3">
+                <a
+                  class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
+                  href="{% url 'subscriptions:list' %}"
+                  >Subscriptions</a
+                >
+              </li>
+              <!-- Logout Form -->
+              <li class="mr-3">
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4 
+                           bg-transparent border-none cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </form>
+              </li>
+
+            <!-- Show if user is not logged in -->
+            {% else %}
+              <li class="mr-3">
+                <a
+                  class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
+                  href="{% url 'login' %}"
+                  >Login</a
+                >
+              </li>
+              <li class="mr-3">
+                <a
+                  class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
+                  href="{% url 'register' %}"
+                  >Register</a
+                >
+              </li>
+            {% endif %}
+
           </ul>
         </div>
       </div>
@@ -129,21 +154,35 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-white">
-      <div class="container mx-auto px-8 py-6">
-        <div class="flex flex-col md:flex-row text-gray-800">
-          <div class="mb-6 md:mb-0 md:mr-6">
-            <h3 class="font-bold text-xl">Subscription Manager</h3>
-            <p class="text-sm">Simplify your subscription tracking.</p>
-          </div>
-          <div class="md:ml-auto">
-            <p class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</p>
-          </div>
+    
+    <footer class="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
+      <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-gray-800 dark:text-gray-400">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-xl font-bold">Subscription Manager</h3>
+          <p class="text-sm">Simplify your subscription tracking.</p>
         </div>
+        <div class="text-center md:text-left">
+          <span class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</span>
+        </div>
+        <ul class="flex flex-wrap items-center mt-4 md:mt-0 text-sm font-medium">
+          <li class="mr-4 md:mr-6">
+            <a href="#" class="hover:underline">About</a>
+          </li>
+          <li class="mr-4 md:mr-6">
+            <a href="#" class="hover:underline">Privacy Policy</a>
+          </li>
+          <li class="mr-4 md:mr-6">
+            <a href="#" class="hover:underline">Licensing</a>
+          </li>
+          <li>
+            <a href="#" class="hover:underline">Contact</a>
+          </li>
+        </ul>
       </div>
     </footer>
 
-    <!-- JS for Nav Toggle, Scroll, etc. -->
+
+    
     <script>
       var scrollpos = window.scrollY;
       var header = document.getElementById("header");
