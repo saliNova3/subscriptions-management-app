@@ -53,10 +53,20 @@ A Django web application that helps users **track and manage** all their subscri
 1. **Clone this repository**:
    ```bash
    gh repo clone saliNova3/subscriptions-management-app
-
-
    
+      # On macOS/Linux:
+      python -m venv venv
+      source venv/bin/activate
+      
+      # On Windows:
+      python -m venv venv
+      venv\Scripts\activat
+         
+      pip install -r requirements.txt
 
 
-
+      python manage.py makemigrations
+      python manage.py migrate
    
+      python manage.py createsuperuser
+      python manage.py runserver
