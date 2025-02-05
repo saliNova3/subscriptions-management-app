@@ -7,6 +7,11 @@ from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from .forms import MyLoginForm
 from .forms import CustomUserCreationForm
+from .utils import send_welcome_email
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 @login_required
 def subscription_list(request):
@@ -71,6 +76,8 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()  # This creates the user
+            # Immediately send a welcome email
+            send_welcome_email(user.email)
             messages.success(request, "Your account was created successfully!")
             # Optionally log the user in immediately
             auth_login(request, user)
@@ -102,3 +109,41 @@ def my_login_view(request):
 
     
     return render(request, 'registration/login.html', {'form': form})
+
+
+
+def send_reminder_view(request, pk):
+    if request.method == 'POST':
+        subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
+        
+        # 1. Get the custom email from the form input
+        recipient_email = request.POST.get('custom_email')
+        if not recipient_email:
+            messages.error(request, "Please provide a valid email address.")
+            return redirect('subscriptions:detail', pk=pk)
+
+        # 2. Build the subject & message
+        subject = f"Reminder: {subscription.name} is Renewing Soon!"
+        message = (
+            f"Hello,\n\n"
+            f"This is a reminder that your subscription to {subscription.name} "
+            f"renews on {subscription.next_renewal}.\n\n"
+            f"Cost: ${subscription.cost}\n"
+            "Thank you for using Subscription Manager!"
+        )
+        from_email = settings.DEFAULT_FROM_EMAIL
+
+        # 3. Send the email
+        send_mail(
+            subject,
+            message,
+            from_email,
+            [recipient_email],
+            fail_silently=False,
+        )
+
+        # 4. Show success and redirect
+        messages.success(request, f"Reminder email sent to {recipient_email}!")
+        return redirect('subscriptions:detail', pk=pk)
+    
+    return redirect('subscriptions:list')

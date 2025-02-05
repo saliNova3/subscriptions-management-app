@@ -8,4 +8,5 @@ urlpatterns = [
     path('create/', views.subscription_create, name='create'),
     path('<int:pk>/', views.subscription_detail, name='detail'),
     path('<int:pk>/update/', views.subscription_update, name='update'),
+    path('<int:pk>/send_reminder/', views.send_reminder_view, name='send_reminder'),
 ]
