@@ -1,44 +1,43 @@
-# subscriptions/management/commands/send_renewals.py
-
-import datetime
 from django.core.management.base import BaseCommand
-from django.core.mail import send_mail
 from django.utils import timezone
+from django.core.mail import send_mail
 from django.conf import settings
-
 from subscriptions.models import Subscription
+from datetime import timedelta
 
 class Command(BaseCommand):
-    help = 'Send email reminders for subscriptions renewing soon'
+    help = 'Send reminder emails for subscriptions that are nearing renewal'
 
-    def handle(self, *args, **options):
-        """
-        Find subscriptions with next_renewal in the next 7 days
-        and send an email reminder to the user.
-        """
-        now = timezone.now().date()
-        in_7_days = now + datetime.timedelta(days=7)
-
-        upcoming_subs = Subscription.objects.filter(next_renewal__range=(now, in_7_days))
-
-        for sub in upcoming_subs:
-            user_email = sub.user.email
-            if user_email:
-                subject = f"Reminder: {sub.name} renews soon"
+    def handle(self, *args, **kwargs):
+        today = timezone.now().date()
+        subscriptions = Subscription.objects.all()
+        
+        for sub in subscriptions:
+            # Calculate when the reminder should be sent
+            reminder_date = sub.next_renewal - timedelta(days=sub.reminder_days)
+            
+            # Check if today is the reminder day
+            # Also check if we haven't already sent a reminder for this renewal period.
+            if reminder_date == today and (not sub.last_reminder_sent or sub.last_reminder_sent < sub.next_renewal):
+                subject = f"Reminder: {sub.name} is renewing soon!"
                 message = (
-                    f"Hello {sub.user.username},\n\n"
-                    f"This is a reminder that your subscription to {sub.name} "
-                    f"will renew on {sub.next_renewal}.\n\n"
-                    "Kind regards,\n"
-                    "Subscription Manager Team"
+                    f"Hello,\n\n"
+                    f"This is a reminder that your subscription to {sub.name} renews on {sub.next_renewal}.\n"
+                    f"Cost: ${sub.cost}\n"
+                    "Thank you for using Subscription Manager!"
                 )
-
-                send_mail(
-                    subject,
-                    message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user_email],
-                    fail_silently=False
-                )
-
-        self.stdout.write(self.style.SUCCESS("Successfully sent subscription renewal reminders"))
+                recipient_email = sub.user.email  
+                try:
+                    send_mail(
+                        subject,
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [recipient_email],
+                        fail_silently=False,
+                    )
+                    # Mark that the reminder was sent today
+                    sub.last_reminder_sent = today
+                    sub.save()
+                    self.stdout.write(f"Sent reminder email for subscription {sub.id} to {recipient_email}")
+                except Exception as e:
+                    self.stderr.write(f"Failed to send email for subscription {sub.id}: {str(e)}")

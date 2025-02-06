@@ -11,7 +11,7 @@ from .utils import send_welcome_email
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-
+from .forms import ReminderEmailForm
 
 @login_required
 def subscription_list(request):
@@ -23,11 +23,12 @@ def subscription_list(request):
 
 @login_required
 def subscription_detail(request, pk):
-    """
-    Show details of a single subscription, ensuring it belongs to the logged-in user.
-    """
     subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
-    return render(request, 'subscriptions/subscription_detail.html', {'subscription': subscription})
+    form = ReminderEmailForm(initial={'custom_email': request.user.email})
+    return render(request, 'subscriptions/subscription_detail.html', {
+        'subscription': subscription,
+        'form': form,
+    })
 
 @login_required
 def subscription_create(request):
@@ -75,7 +76,7 @@ def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()  # This creates the user
+            user = form.save()  # This now saves the email as well
             # Immediately send a welcome email
             send_welcome_email(user.email)
             messages.success(request, "Your account was created successfully!")
@@ -122,18 +123,32 @@ def send_reminder_view(request, pk):
             messages.error(request, "Please provide a valid email address.")
             return redirect('subscriptions:detail', pk=pk)
 
-        # 2. Build the subject & message
-        subject = f"Reminder: {subscription.name} is Renewing Soon!"
+        # 2. Get the reminder offset from the form input.
+        reminder_days_str = request.POST.get('reminder_days')
+        if reminder_days_str:
+            try:
+                reminder_days = int(reminder_days_str)
+            except ValueError:
+                reminder_days = subscription.reminder_days  # fallback to current value if conversion fails
+        else:
+            reminder_days = subscription.reminder_days  # use the stored value if nothing is submitted
+
+        # Optionally, update the subscription with the new reminder preference
+        subscription.reminder_days = reminder_days
+        subscription.save()
+
+        # 3. Build the subject & message incorporating the chosen offset.
+        subject = f"Reminder: {subscription.name} renewal approaching!"
         message = (
             f"Hello,\n\n"
-            f"This is a reminder that your subscription to {subscription.name} "
-            f"renews on {subscription.next_renewal}.\n\n"
-            f"Cost: ${subscription.cost}\n"
+            f"This is a reminder that your subscription to {subscription.name} is set to renew on {subscription.next_renewal}.\n"
+            f"You chose to be reminded {reminder_days} days in advance.\n"
+            f"Cost: ${subscription.cost}\n\n"
             "Thank you for using Subscription Manager!"
         )
         from_email = settings.DEFAULT_FROM_EMAIL
 
-        # 3. Send the email
+        # 4. Send the email.
         send_mail(
             subject,
             message,
@@ -142,7 +157,7 @@ def send_reminder_view(request, pk):
             fail_silently=False,
         )
 
-        # 4. Show success and redirect
+        # 5. Show success and redirect.
         messages.success(request, f"Reminder email sent to {recipient_email}!")
         return redirect('subscriptions:detail', pk=pk)
     

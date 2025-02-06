@@ -1,103 +1,77 @@
 {% extends 'base.html' %}
 {% load static %}
+<!-- If using widget_tweaks, also do: {% load widget_tweaks %} -->
 
 {% block content %}
-<section class="bg-gray-50 dark:bg-gray-900 min-h-screen">
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-    <!-- Logo / App Name -->
-    <a
-      href="{% url 'home' %}"
-      class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-    >
-      <!-- Example Logo -->
-      <img
-        class="w-8 h-8 mr-2"
-        src="{% static 'images/calendar.svg' %}"
-        alt="Subscription Manager Logo"
-      />
-      Subscription Manager
-    </a>
+<div class="container px-3 mx-auto flex flex-wrap items-center min-h-screen">
+  <!-- Left Column: Introductory Text -->
+  <div class="flex flex-col w-full md:w-1/2 justify-center items-start" data-aos="fade-right" data-aos-duration="1000">
+    <h1 class="text-5xl font-bold text-text-primary mb-4">Create an Account</h1>
+    <p class="text-2xl text-text-secondary">
+      Join Subscription Manager and start tracking all your subscriptions effortlessly.
+    </p>
+    <p class="mt-4 text-text-secondary">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-accent-color font-bold hover:underline">Login here</a>.
+    </p>
+  </div>
 
-    <!-- Form Container -->
-    <div
-      class="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0
-             dark:bg-gray-800 dark:border-gray-700"
-    >
-      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          Create an account
-        </h1>
+  <!-- Right Column: Registration Form -->
+  <div class="flex flex-col w-full md:w-1/2 justify-center items-center" data-aos="fade-left" data-aos-duration="1000">
+    <div class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 
+                rounded-lg shadow px-6 py-8 sm:max-w-md">
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        <!-- Optional: show non-field errors at the top -->
+        {{ form.non_field_errors }}
 
-        <!-- Registration Form -->
-        <form method="post" class="space-y-4 md:space-y-6">
-          {% csrf_token %}
+        <!-- Username Field -->
+        <div>
+          <label for="{{ form.username.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Username
+          </label>
+          {{ form.username }}
+          
+          {{ form.username.errors }}
+        </div>
 
-          <!-- Display any Django messages (optional) -->
-          {% if messages %}
-            <ul>
-              {% for message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+        <!-- Email Field -->
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Email
+          </label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
 
-          <!-- Username Field -->
-          <div>
-            <label
-              for="id_username"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white "
-            >
-              Username
-            </label>
-            {{ form.username }}
-          </div>
+        <!-- Password Field -->
+        <div>
+          <label for="{{ form.password1.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Password
+          </label>
+          {{ form.password1 }}
+          {{ form.password1.errors }}
+        </div>
 
-          <!-- Password Field -->
-          <div>
-            <label
-              for="id_password1"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Password
-            </label>
-            {{ form.password1 }}
-          </div>
+        <!-- Confirm Password Field -->
+        <div>
+          <label for="{{ form.password2.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Confirm Password
+          </label>
+          {{ form.password2 }}
+          {{ form.password2.errors }}
+        </div>
 
-          <!-- Confirm Password Field -->
-          <div>
-            <label
-              for="id_password2"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Confirm Password
-            </label>
-            {{ form.password2 }}
-          </div>
-
-          <!-- Submit Button -->
-          <button
-            type="submit"
-            class="w-full text-white bg-blue-600 hover:bg-blue-700 
-                   focus:ring-4 focus:outline-none focus:ring-blue-300 
-                   font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                   dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Create an account
-          </button>
-
-          <!-- Already Registered -->
-          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Already have an account?
-            <a
-              href="{% url 'login' %}"
-              class="font-medium text-blue-600 hover:underline dark:text-blue-500"
-            >
-              Login here
-            </a>
-          </p>
-        </form>
-      </div>
+        <!-- Submit Button -->
+        <button type="submit" 
+          class="w-full py-3 px-5 text-white font-medium rounded-lg text-lg text-center 
+                 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none 
+                 focus:ring-blue-300 transition-all duration-200
+                 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Create an Account
+        </button>
+      </form>
     </div>
   </div>
-</section>
+</div>
 {% endblock content %}

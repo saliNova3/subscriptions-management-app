@@ -5,242 +5,275 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" type="image/png" href="{% static 'images/price-tag.png' %}">
-
     <title>Subscription Manager</title>
     
     <!-- Tailwind CSS via CDN -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-    />
-    <!-- Optional Google Font -->
-    <link
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Animation library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-    <!-- Gradient style for header/hero (optional) -->
     <style>
+      :root {
+        /* Dark theme colors */
+        --primary-color: #1a1a2e;
+        --secondary-color: #16213e;
+        --accent-color: #4d7cff;
+        --background-color: #0f0f1a;
+        --surface-color: #1f1f2f;
+        --text-primary: #e1e1e6;
+        --text-secondary: #9ca3af;
+        --border-color: #2a2a3c;
+        --hover-color: #2d2d44;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-primary);
+      }
+
       .gradient {
-        background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      }
+
+      .card {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-color);
+        box-shadow: 0 4px 20px rgba(77, 124, 255, 0.1);
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+        color: var(--text-primary);
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: var(--accent-color);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--accent-color);
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .grid-container {
+        display: grid;
+        gap: 2rem;
+        padding: 2rem;
+      }
+
+      @media (min-width: 640px) {
+        .grid-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .grid-container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Custom Scrollbar - Dark Theme */
+      ::-webkit-scrollbar {
+        width: 8px;
+        background: var(--background-color);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--surface-color);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+        border-radius: 4px;
+      }
+
+      /* Dark theme specific styles */
+      .dark-header {
+        background: var(--surface-color);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .dark-footer {
+        background: var(--surface-color);
+        border-top: 1px solid var(--border-color);
+      }
+
+      /* Notification styles for dark theme */
+      .notification-card {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+      }
+
+      /* Button styles */
+      .dark-button {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+      }
+
+      .dark-button:hover {
+        background: var(--hover-color);
+        border-color: var(--accent-color);
       }
     </style>
   </head>
 
-  <body
-    class="leading-normal tracking-normal text-white gradient"
-    style="font-family: 'Source Sans Pro', sans-serif;"
-  >
+  <body class="leading-normal tracking-normal">
     <!-- NAVBAR -->
-    <nav id="header" class="fixed w-full z-30 top-0 text-white">
-      <div
-        class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2"
-      >
-        <!-- Brand / Logo -->
+    <nav id="header" class="fixed w-full z-30 top-0 dark-header transition-all duration-300">
+      <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2">
         <div class="pl-4 flex items-center">
-          <a
-            id="brandname"
-            href="{% url 'home' %}"
-            class="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
-          >
-            <!-- Example inline SVG icon -->
-            <svg
-              class="h-8 w-8 text-white inline mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 
-                   7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 
-                   1 0 01-1 1h-3m-4 0h3"
-              />
-            </svg>
+          <a href="{% url 'home' %}" class="text-accent-color no-underline hover:no-underline font-bold text-2xl lg:text-4xl flex items-center">
+            <i class="fas fa-wallet mr-3"></i>
             Subscription Manager
           </a>
         </div>
 
-        <!-- Mobile hamburger toggle -->
         <div class="block lg:hidden pr-4">
-          <button
-            id="nav-toggle"
-            class="flex items-center p-1 text-pink-800 hover:text-gray-900 focus:outline-none
-                   transform transition hover:scale-105 duration-300 ease-in-out"
-          >
-            <svg
-              class="fill-current h-6 w-6"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-            </svg>
+          <button id="nav-toggle" class="flex items-center p-1 hover:text-accent-color focus:outline-none">
+            <i class="fas fa-bars"></i>
           </button>
         </div>
 
-        <!-- Nav links -->
-        <div
-          class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-white 
-                 lg:bg-transparent text-black p-4 lg:p-0 z-20"
-          id="nav-content"
-        >
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-surface-color lg:bg-transparent p-4 lg:p-0 z-20" id="nav-content">
           <ul class="list-reset lg:flex justify-end flex-1 items-center">
-
-            <!-- Always visible: Home link -->
             <li class="mr-3">
-              <a
-                class="inline-block py-2 px-4 text-black font-bold no-underline"
-                href="{% url 'home' %}"
-                >Home</a
-              >
+              <a href="{% url 'home' %}" class="nav-link inline-block py-2 px-4">
+                <i class="fas fa-home mr-2"></i>Home
+              </a>
             </li>
 
-            <!-- Show if user is logged in -->
             {% if user.is_authenticated %}
-              <!-- Example: Link to Subscriptions -->
               <li class="mr-3">
-                <a
-                  class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
-                  href="{% url 'subscriptions:list' %}"
-                  >Subscriptions</a
-                >
+                <a href="{% url 'subscriptions:list' %}" class="nav-link inline-block py-2 px-4">
+                  <i class="fas fa-list-ul mr-2"></i>Subscriptions
+                </a>
               </li>
-              <!-- Logout Form -->
               <li class="mr-3">
-                <form method="post" action="{% url 'logout' %}">
+                <form method="post" action="{% url 'logout' %}" class="inline-block">
                   {% csrf_token %}
-                  <button
-                    type="submit"
-                    class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4 
-                           bg-transparent border-none cursor-pointer"
-                  >
-                    Logout
+                  <button type="submit" class="nav-link dark-button py-2 px-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
                   </button>
                 </form>
               </li>
-
-            <!-- Show if user is not logged in -->
             {% else %}
               <li class="mr-3">
-                <a
-                  class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
-                  href="{% url 'login' %}"
-                  >Login</a
-                >
+                <a href="{% url 'login' %}" class="nav-link inline-block py-2 px-4">
+                  <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
               </li>
               <li class="mr-3">
-                <a
-                  class="inline-block text-black no-underline hover:text-gray-800 py-2 px-4"
-                  href="{% url 'register' %}"
-                  >Register</a
-                >
+                <a href="{% url 'register' %}" class="nav-link inline-block py-2 px-4">
+                  <i class="fas fa-user-plus mr-2"></i>Register
+                </a>
               </li>
             {% endif %}
-
           </ul>
         </div>
       </div>
-      <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
     </nav>
 
     <!-- MAIN CONTENT -->
     <div class="pt-24">
-      {% block content %}
-      {% endblock content %}
+      <div class="container mx-auto px-4">
+        {% block content %}
+        {% endblock content %}
+      </div>
     </div>
 
-        {% if messages %}
-      <ul>
-        {% for message in messages %}
-          <li class="text-green-600 font-semibold">{{ message }}</li>
-        {% endfor %}
-      </ul>
+    <!-- NOTIFICATIONS -->
+    {% if messages %}
+    <div class="fixed top-4 right-4 space-y-2 z-50">
+      {% for message in messages %}
+        <div data-aos="fade-left" class="notification-card p-4 rounded-lg shadow-lg {% if message.tags == 'success' %}border-green-500 text-green-400{% elif message.tags == 'error' %}border-red-500 text-red-400{% else %}border-gray-500 text-gray-400{% endif %}">
+          <div class="flex items-center">
+            <i class="{% if message.tags == 'success' %}fas fa-check-circle{% elif message.tags == 'error' %}fas fa-exclamation-circle{% else %}fas fa-info-circle{% endif %} mr-2"></i>
+            <span>{{ message }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
     {% endif %}
 
-
     <!-- FOOTER -->
-    
-    <footer class="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
-      <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-gray-800 dark:text-gray-400">
-        <div class="mb-4 md:mb-0">
-          <h3 class="text-xl font-bold">Subscription Manager</h3>
-          <p class="text-sm">Simplify your subscription tracking.</p>
+    <footer class="fixed bottom-0 left-0 z-20 w-full p-4 dark-footer">
+      <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-text-secondary">
+        <div class="text-center md:text-left" data-aos="fade-up">
+          <h3 class="text-xl font-bold flex items-center justify-center md:justify-start text-accent-color">
+            <i class="fas fa-wallet mr-2"></i>
+            Subscription Manager
+          </h3>
+          <p class="text-sm mt-2">Simplify your subscription tracking.</p>
         </div>
-        <div class="text-center md:text-left">
-          <span class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</span>
+        <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+          <p class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</p>
         </div>
-        <ul class="flex flex-wrap items-center mt-4 md:mt-0 text-sm font-medium">
-          <li class="mr-4 md:mr-6">
-            <a href="#" class="hover:underline">About</a>
-          </li>
-          <li class="mr-4 md:mr-6">
-            <a href="#" class="hover:underline">Privacy Policy</a>
-          </li>
-          <li class="mr-4 md:mr-6">
-            <a href="#" class="hover:underline">Licensing</a>
-          </li>
-          <li>
-            <a href="#" class="hover:underline">Contact</a>
-          </li>
-        </ul>
+        <div class="text-center md:text-right" data-aos="fade-up" data-aos-delay="200">
+          <ul class="flex justify-center md:justify-end space-x-6">
+            <li><a href="#" class="hover:text-accent-color transition-colors"><i class="fas fa-info-circle mr-1"></i>About</a></li>
+            <li><a href="#" class="hover:text-accent-color transition-colors"><i class="fas fa-shield-alt mr-1"></i>Privacy</a></li>
+            <li><a href="#" class="hover:text-accent-color transition-colors"><i class="fas fa-envelope mr-1"></i>Contact</a></li>
+          </ul>
+        </div>
       </div>
     </footer>
 
-
-    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+      });
+
+      // Navbar scroll behavior
       var scrollpos = window.scrollY;
       var header = document.getElementById("header");
       var navcontent = document.getElementById("nav-content");
       var navtoggle = document.getElementById("nav-toggle");
-      var toToggle = document.querySelectorAll(".toggleColour");
 
-      document.addEventListener("scroll", function () {
+      document.addEventListener("scroll", function() {
         scrollpos = window.scrollY;
         if (scrollpos > 10) {
-          header.classList.add("bg-white", "shadow");
-          navcontent.classList.remove("bg-gray-100");
-          navcontent.classList.add("bg-white");
-
-          for (var i = 0; i < toToggle.length; i++) {
-            toToggle[i].classList.add("text-gray-800");
-            toToggle[i].classList.remove("text-white");
-          }
+          header.classList.add("shadow-lg");
         } else {
-          header.classList.remove("bg-white", "shadow");
-          navcontent.classList.remove("bg-white");
-          navcontent.classList.add("bg-gray-100");
-
-          for (var i = 0; i < toToggle.length; i++) {
-            toToggle[i].classList.add("text-white");
-            toToggle[i].classList.remove("text-gray-800");
-          }
+          header.classList.remove("shadow-lg");
         }
       });
 
-      // Menu toggle for mobile
-      document.onclick = check;
-      function check(e) {
-        var target = (e && e.target) || (event && event.srcElement);
-        if (!checkParent(target, navcontent)) {
-          if (checkParent(target, navtoggle)) {
-            navcontent.classList.toggle("hidden");
-          } else {
-            navcontent.classList.add("hidden");
-          }
-        }
-      }
-      function checkParent(t, elm) {
-        while (t.parentNode) {
-          if (t == elm) return true;
-          t = t.parentNode;
-        }
-        return false;
-      }
+      // Mobile menu toggle
+      document.getElementById("nav-toggle").addEventListener("click", function() {
+        document.getElementById("nav-content").classList.toggle("hidden");
+      });
     </script>
   </body>
 </html>
