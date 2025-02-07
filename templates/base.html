@@ -223,27 +223,45 @@
     {% endif %}
 
     <!-- FOOTER -->
-    <footer class="fixed bottom-0 left-0 z-20 w-full p-4 dark-footer">
-      <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-text-secondary">
-        <div class="text-center md:text-left" data-aos="fade-up">
-          <h3 class="text-xl font-bold flex items-center justify-center md:justify-start text-accent-color">
-            <i class="fas fa-wallet mr-2"></i>
-            Subscription Manager
-          </h3>
-          <p class="text-sm mt-2">Simplify your subscription tracking.</p>
-        </div>
-        <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-          <p class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</p>
-        </div>
-        <div class="text-center md:text-right" data-aos="fade-up" data-aos-delay="200">
-          <ul class="flex justify-center md:justify-end space-x-6">
-            <li><a href="#" class="hover:text-accent-color transition-colors"><i class="fas fa-info-circle mr-1"></i>About</a></li>
-            <li><a href="#" class="hover:text-accent-color transition-colors"><i class="fas fa-shield-alt mr-1"></i>Privacy</a></li>
-            <li><a href="#" class="hover:text-accent-color transition-colors"><i class="fas fa-envelope mr-1"></i>Contact</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
+<footer class="w-full p-4 dark-footer md:fixed md:bottom-0 md:left-0 md:z-20">
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-text-secondary">
+    <!-- Left Section -->
+    <div class="text-center md:text-left" data-aos="fade-up">
+      <h3 class="text-xl font-bold flex items-center justify-center md:justify-start text-accent-color">
+        <i class="fas fa-wallet mr-2"></i>
+        Subscription Manager
+      </h3>
+      <p class="text-sm mt-2">Simplify your subscription tracking.</p>
+    </div>
+
+    <!-- Middle Section -->
+    <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+      <p class="text-sm">&copy; 2025 Subscription Manager. All rights reserved.</p>
+    </div>
+
+    <!-- Right Section -->
+    <div class="text-center md:text-right" data-aos="fade-up" data-aos-delay="200">
+      <ul class="flex justify-center md:justify-end space-x-6">
+        <li>
+          <a href="#" class="hover:text-accent-color transition-colors">
+            <i class="fas fa-info-circle mr-1"></i>About
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:text-accent-color transition-colors">
+            <i class="fas fa-shield-alt mr-1"></i>Privacy
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:text-accent-color transition-colors">
+            <i class="fas fa-envelope mr-1"></i>Contact
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
